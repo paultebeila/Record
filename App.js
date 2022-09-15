@@ -1,21 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
+import { Audio } from 'expo-av';
 
 export default function App() {
 
   const [recording, setRecording] = React.useState();
-  const [recodings, setRecordings] = React.useState();
+  const [recodings, setRecordings] = React.useState([]);
   const [message, setMessage] = React.useState("");
 
-  async function startRecoeding(){
+  async function startRecoeding() {
     try {
-      const permision = await Audio.requestPermissionsAsync();
+      const permission = await Audio.requestPermissionsAsync();
 
-      if(permision.status === "granted"){
+      if(permission.status === "granted") {
         await Audio.setAudioModeAsync({
           allowRecordingIOS: true,
-          playInSilentModeIOS: true,
+          playInSilentModeIOS: true
         });
         const { recording } = await Audio.Recording.createAsync(
           Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
@@ -25,7 +26,7 @@ export default function App() {
         setMessage("Please grant permission to the app to access microphone");
       }
     } catch(err) {
-      console.error('Failed to start recording', err)
+      console.error('Failed to start recording', err);
     }
   }
   async function stopRecording(){
